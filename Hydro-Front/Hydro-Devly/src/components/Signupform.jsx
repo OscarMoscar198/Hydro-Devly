@@ -1,9 +1,36 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
 import signupback from "./../assets/Signup/signup-background.jpg"
 
 function Signupform() {
     const navigate=useNavigate();
+
+    const [email, setEmail] = useState("");
+    const [username, setUserName] = useState("");
+   const [password, setPassword] = useState("");
+
+    const registerHandler = (event) => {
+      const user = {
+        email,
+        username,
+        password,
+      };
+      event.preventDefault();
+
+       axios
+        .post("http://localhost:400/register", user)
+        .then((response) => {
+          // Procesar la respuesta exitosa si es necesario
+          console.log(response.data);
+          navigate("/");
+        })
+        .catch((error) => {
+          // Procesar el error si es necesario
+        console.log(error);
+       }); 
+   };
   return (
     <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
     <img src={signupback} className=' absolute blur-sm h-screen w-screen ' />
@@ -21,6 +48,11 @@ function Signupform() {
           </label>
           <input
             type="username"
+            id='user'
+            value={username}
+            onChange={(e) => setUserName(e.target.value)}
+            required
+            autoComplete='off'
             className="shadow appearance-none block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-gray-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
             placeholder='Username'/>
         </div>
@@ -32,7 +64,11 @@ function Signupform() {
             Email
           </label>
           <input
+            id='email'
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="off"
             className="shadow appearance-none block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-gray-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
             placeholder='example@hotmail.com'
           />
@@ -45,7 +81,14 @@ function Signupform() {
             Password
           </label>
           <input
+            id='password'
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            maxLength={20}
+            minLength={8}
+            required
+            autoComplete='off'
             className="shadow appearance-none block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-gray-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
             placeholder='**********'
           />
@@ -54,7 +97,7 @@ function Signupform() {
           Password needs at least 8 characters.
         </p>
         <div className="mt-6 flex">
-          <button className="mx-auto w-full px-4 py-2 text-white bg-blue-800 rounded-lg hover:bg-blue-500 focus:outline-none focus:bg-gray-600 font-semibold transition duration-150 ease-in">
+          <button type='submit' onClick={registerHandler} className="mx-auto w-full px-4 py-2 text-white bg-blue-800 rounded-lg hover:bg-blue-500 focus:outline-none focus:bg-gray-600 font-semibold transition duration-150 ease-in">
             Sign up
           </button>
         </div>
