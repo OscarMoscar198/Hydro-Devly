@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_pymongo import PyMongo
 from pymongo import DESCENDING
-
 from pdf_generator import generar_pdf
 from calculator import statistical_calculator
 import jwt
@@ -10,14 +9,11 @@ import pandas as pd
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__, static_folder="Public", static_url_path="/Public")
-app.config['MONGO_URI'] = 'mongodb+srv://sensorsDevly:devly1@sensorsdevly.wnv4cc4.mongodb.net/Sensors'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/Devly'
 app.config['SECRET_KEY'] = 'b99878292951aa53e17598417a4a0a0121fcd0808ef8ae13f76a786a09bdaa4f'
 mongo = PyMongo(app)
 
-
-
 CORS(app)
-
 
 @app.route("/login", methods=["POST"])
 @cross_origin(origin="http://localhost:3000", headers=["Content-Type"])
@@ -63,6 +59,8 @@ def register():
     mongo.db.users.insert_one(new_user)
 
     return jsonify({"message": "Usuario registrado exitosamente"}), 201
+
+
 @app.route('/api/calcular', methods=['GET'])
 def obtener_documentos():
     token = request.headers.get('Authorization')
@@ -74,60 +72,65 @@ def obtener_documentos():
         payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
         username = payload['username']
         documentos = mongo.db.Datos.find().sort("_id", DESCENDING).limit(50)
-        campo1_output = []
-        campo2_output = []
-        campo3_output = []
-        campo4_output = []
-        campo5_output = []
+        campoTemperature_output = []
+        campoHumidity_output = []
+        campoWaterTem_output = []
+        campoLight_output = []
+        campoPH_output = []
+        campoConduc_output = []
         for documento in documentos:
-            campo1_output.append(documento['Temperature'])
-            campo2_output.append(documento['Humidity'])
-            campo3_output.append(documento['Pressure'])
-            campo4_output.append(documento['CO2'])
-            campo5_output.append(documento['Altitude'])
+            campoTemperature_output.append(documento['temperature'])
+            campoHumidity_output.append(documento['humidity'])
+            campoWaterTem_output.append(documento['waterTem'])
+            campoLight_output.append(documento['light'])
+            campoPH_output.append(documento['pH'])
+            campoConduc_output.append(documento['conduc'])
         pdf_filename = 'ReporteSensores.pdf'
         # Realizar la operación
-        arr_sorted_campo1 = campo1_output[:50] if len(campo1_output) >= 50 else campo1_output
-        arr_sorted_campo2 = campo2_output[:50] if len(campo2_output) >= 50 else campo2_output
-        arr_sorted_campo3 = campo3_output[:50] if len(campo3_output) >= 50 else campo3_output
-        arr_sorted_campo4 = campo4_output[:50] if len(campo4_output) >= 50 else campo4_output
-        arr_sorted_campo5 = campo5_output[:50] if len(campo5_output) >= 50 else campo5_output
+        arr_sorted_campoTemperature = campoTemperature_output[:50] if len(campoTemperature_output) >= 50 else campoTemperature_output
+        arr_sorted_campoHumidity = campoHumidity_output[:50] if len(campoHumidity_output) >= 50 else campoHumidity_output
+        arr_sorted_campoWaterTem = campoWaterTem_output[:50] if len(campoWaterTem_output) >= 50 else campoWaterTem_output
+        arr_sorted_campoLight = campoLight_output[:50] if len(campoLight_output) >= 50 else campoLight_output
+        arr_sorted_campoPH = campoPH_output[:50] if len(campoPH_output) >= 50 else campoPH_output
+        arr_sorted_campoConduc = campoConduc_output[:50] if len(campoConduc_output) >= 50 else campoConduc_output
         #Temperatura
-        desviacion_media_campo1, media_campo1, varianza_campo1, desviacion_estandar_campo1, arr_ordenate_campo1,table_frecuency_campo1,moda_campo1 = statistical_calculator(
-            arr_sorted_campo1)
+        desviacion_media_campoTemperature, media_campoTemperature, varianza_campoTemperature, desviacion_estandar_campoTemperature, arr_ordenate_campoTemperature, table_frecuency_campoTemperature, moda_campoTemperature = statistical_calculator(
+            arr_sorted_campoTemperature)
         #Humedad
-        desviacion_media_campo2, media_campo2, varianza_campo2, desviacion_estandar_campo2, arr_ordenate_campo2, table_frecuency_campo2,moda_campo2 = statistical_calculator(
-            arr_sorted_campo2)
-        #Presion
-        desviacion_media_campo3, media_campo3, varianza_campo3, desviacion_estandar_campo3, arr_ordenate_campo3, table_frecuency_campo3,moda_campo3= statistical_calculator(
-            arr_sorted_campo3)
-        #CO2
-        desviacion_media_campo4, media_campo4, varianza_campo4, desviacion_estandar_campo4, arr_ordenate_campo4, table_frecuency_campo4,moda_campo4= statistical_calculator(
-            arr_sorted_campo4)
-        #Altitud
-        desviacion_media_campo5, media_campo5, varianza_campo5, desviacion_estandar_campo5, arr_ordenate_campo5, table_frecuency_campo5,moda_campo5= statistical_calculator(
-            arr_sorted_campo5)
+        desviacion_media_campoHumidity, media_campoHumidity, varianza_campoHumidity, desviacion_estandar_campoHumidity, arr_ordenate_campoHumidity, table_frecuency_campoHumidity, moda_campoHumidity = statistical_calculator(
+            arr_sorted_campoHumidity)
+        #waterTemperature
+        desviacion_media_campoWaterTem, media_campoWaterTem, varianza_campoWaterTem, desviacion_estandar_campoWaterTem, arr_ordenate_campoWaterTem, table_frecuency_campoWaterTem, moda_campoWaterTem= statistical_calculator(
+            arr_sorted_campoWaterTem)
+        #Luz
+        desviacion_media_campoLight, media_campoLight, varianza_campoLight, desviacion_estandar_campoLight, arr_ordenate_campoLight, table_frecuency_campoLight, moda_campoLight= statistical_calculator(
+            arr_sorted_campoLight)
+        #pH
+        desviacion_media_campoPH, media_campoPH, varianza_campoPH, desviacion_estandar_campoPH, arr_ordenate_campoPH, table_frecuency_campoPH, moda_campoPH= statistical_calculator(
+            arr_sorted_campoPH)
+        #Conductivity
+        desviacion_media_campoConduC, media_campoConduc, varianza_campoConduc, desviacion_estandar_campoConduc, arr_ordenate_campoConduc, table_frecuency_campoConduc, moda_campoConduc= statistical_calculator(
+            arr_sorted_campoConduc)
 
-        print(arr_ordenate_campo5)
+        print(arr_ordenate_campoTemperature)
         #Generar pdf
-        generar_pdf(pd.DataFrame(table_frecuency_campo2),pd.DataFrame(table_frecuency_campo1),pd.DataFrame(table_frecuency_campo3),
-        pd.DataFrame(table_frecuency_campo4),pd.DataFrame(table_frecuency_campo5),arr_sorted_campo2, desviacion_media_campo2, varianza_campo2, media_campo2,
-        desviacion_estandar_campo2,arr_sorted_campo1, arr_ordenate_campo2, arr_ordenate_campo1,
-        desviacion_media_campo1, media_campo1, varianza_campo1, desviacion_estandar_campo1,pdf_filename,
-        desviacion_media_campo3, media_campo3, varianza_campo3, desviacion_estandar_campo3, arr_ordenate_campo3,
-        arr_sorted_campo3,desviacion_media_campo4, media_campo4, varianza_campo4, desviacion_estandar_campo4, arr_ordenate_campo4,
-        arr_sorted_campo4,desviacion_media_campo5, media_campo5, varianza_campo5, desviacion_estandar_campo5,arr_ordenate_campo5,arr_sorted_campo5,moda_campo1,moda_campo2
-                ,moda_campo3,moda_campo4,moda_campo5)
+        generar_pdf(pd.DataFrame(table_frecuency_campoTemperature),pd.DataFrame(table_frecuency_campoHumidity),pd.DataFrame(table_frecuency_campoWaterTem),
+        pd.DataFrame(table_frecuency_campoLight),pd.DataFrame(table_frecuency_campoPH),pd.DataFrame(table_frecuency_campoConduc),arr_sorted_campoHumidity, desviacion_media_campoHumidity, varianza_campoHumidity, media_campoHumidity,
+        desviacion_estandar_campoHumidity,arr_sorted_campoTemperature, arr_ordenate_campoTemperature, arr_ordenate_campoTemperature,
+        desviacion_media_campoTemperature, media_campoTemperature, varianza_campoTemperature, desviacion_estandar_campoTemperature,pdf_filename,
+        desviacion_media_campoWaterTem, media_campoWaterTem, varianza_campoWaterTem, desviacion_estandar_campoWaterTem, arr_ordenate_campoWaterTem,
+        arr_sorted_campoWaterTem,desviacion_media_campoLight, media_campoLight, varianza_campoLight, desviacion_estandar_campoLight, arr_ordenate_campoLight,
+        arr_sorted_campoLight,desviacion_media_campoPH, media_campoPH, varianza_campoPH, desviacion_estandar_campoPH,arr_ordenate_campoPH,arr_sorted_campoPH,moda_campoHumidity,moda_campoTemperature
+                ,moda_campoWaterTem,moda_campoLight,moda_campoPH, moda_campoConduc,arr_sorted_campoConduc, desviacion_media_campoConduC, varianza_campoConduc, media_campoConduc,
+        desviacion_estandar_campoConduc)
 
-        pdf_url = "http://localhost:6000/Public/ReporteSensores.pdf"
+        pdf_url = "http://localhost:6000/Public/ReporteDevly_Hydro.pdf"
 
         return jsonify({'url': pdf_url})
 
 
     except jwt.InvalidTokenError:
         return jsonify({'message': 'Token inválido'}), 401
-
-
 
 
 
