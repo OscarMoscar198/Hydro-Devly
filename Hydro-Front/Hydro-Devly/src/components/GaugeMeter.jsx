@@ -1,7 +1,6 @@
 import Gauge from 'react-svg-gauge';
 import '../assets/styles/gaugeMeter.css';
 
-// eslint-disable-next-line react/prop-types
 const GaugeMeter = ({ value, label, color }) => {
     return (
         <div className="gauge-meter">

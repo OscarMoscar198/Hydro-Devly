@@ -11,6 +11,15 @@ const Home = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        console.log(sessionStorage.getItem("token"))
+        if (sessionStorage.getItem("token") != null) {
+            console.log("ENTRE")
+            sessionStorage.removeItem("token")
+
+        }
+    }, [])
+
+    useEffect(() => {
         const token = sessionStorage.getItem('token');
         // console.log(token);
         axios
@@ -30,40 +39,63 @@ const Home = () => {
             });
     }, []);
 
+    const waterTempRand = Math.floor(Math.random() * 100) + 1;
+    const waterPhRand = Math.floor(Math.random() * 100) + 1;
+    const airTempRand = Math.floor(Math.random() * 100) + 1;
+    const airHumRand = Math.floor(Math.random() * 100) + 1;
 
     const data = [
-        { waterTemperature: 25, waterPh: 7.2, airTemperature: 30, airHumidity: 60 },
-        { waterTemperature: 26, waterPh: 7.0, airTemperature: 28, airHumidity: 55 },
-        { waterTemperature: 27, waterPh: 7.5, airTemperature: 29, airHumidity: 58 },
+        {
+            waterTemperature: Math.floor(Math.random() * 100) + 1,
+            waterPh: Math.floor(Math.random() * 100) + 1,
+            airTemperature: Math.floor(Math.random() * 100) + 1,
+            airHumidity: Math.floor(Math.random() * 100) + 1
+        },
+        {
+            waterTemperature: Math.floor(Math.random() * 100) + 1,
+            waterPh: Math.floor(Math.random() * 100) + 1,
+            airTemperature: Math.floor(Math.random() * 100) + 1,
+            airHumidity: Math.floor(Math.random() * 100) + 1
+        },
+        {
+            waterTemperature: Math.floor(Math.random() * 100) + 1,
+            waterPh: Math.floor(Math.random() * 100) + 1,
+            airTemperature: Math.floor(Math.random() * 100) + 1,
+            airHumidity: Math.floor(Math.random() * 100) + 1
+        },
         // Add more sensor data objects here
     ];
 
     return (
         <div className="home-container">
             <div className="home">
-                <div>
-                    <HomeSidebar />
+                <div className="sidebar-container">
+                    <HomeSidebar/>
                 </div>
+                <div className="main-container">
+                    {isLoading ? (
+                        <p>Loading...</p>
+                    ) : (
+                        <div>
+                            <div className="card-group">
+                                <Card title="Water Temperature" value={waterTempRand}/>
+                                <Card title="Water pH" value={waterPhRand}/>
+                                <Card title="Air Temperature" value={airTempRand}/>
+                                <Card title="Air Humidity" value={airHumRand}/>
+                            </div>
+                            <div className="gauge-meter-group">
+                                <GaugeMeter value={waterTempRand} label="Water Temperature" color="#00FFFF"/>
+                                <GaugeMeter value={waterPhRand} label="Water pH" color="#FFFF00"/>
+                                <GaugeMeter value={airTempRand} label="Air Temperature" color="#DC143C"/>
+                                <GaugeMeter value={airHumRand} label="Air Humidity" color="#8A2BE2"/>
+                            </div>
+                            {/*<Chart data={data}/>*/}
+                            <div className="blank">
 
-                {isLoading ? (
-                    <p>Loading...</p>
-                ) : (
-                    <div>
-                        <div className="card-group">
-                            <Card title="Water Temperature" value={10} />
-                            <Card title="Water pH" value={10}/>
-                            <Card title="Air Temperature" value={10}/>
-                            <Card title="Air Humidity" value={10}/>
+                            </div>
                         </div>
-                        <div className="gauge-meter-group">
-                            <GaugeMeter value={10} label="Water Temperature" color="#00FFFF" />
-                            <GaugeMeter value={10} label="Water pH" color="#FFFF00" />
-                            <GaugeMeter value={10} label="Air Temperature" color="#DC143C" />
-                            <GaugeMeter value={10} label="Air Humidity" color="#8A2BE2" />
-                        </div>
-                        <Chart data={data}/>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );

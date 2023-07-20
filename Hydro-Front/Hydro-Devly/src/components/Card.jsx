@@ -1,7 +1,6 @@
 import React from 'react';
-import "../assets/styles/card.css"
+import '../assets/styles/card.css';
 
-// eslint-disable-next-line react/prop-types
 const Card = ({ title, value }) => {
     return (
         <div className="card">

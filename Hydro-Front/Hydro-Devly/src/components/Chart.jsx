@@ -1,5 +1,6 @@
 import React from 'react';
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
+import '../assets/styles/chart.css'
 
 // eslint-disable-next-line react/prop-types
 const Chart = ({ data }) => {

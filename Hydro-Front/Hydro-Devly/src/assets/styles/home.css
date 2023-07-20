@@ -1,33 +1,78 @@
+/* Common styles for both mobile and desktop */
 .home-container {
     background-color: lightblue !important;
 }
+
 .home {
     padding-left: 10%;
     padding-right: 10%;
     padding-top: 2%;
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
-/*.temp-card-container {*/
-/*    display: flex;*/
-/*    flex-wrap: wrap;*/
-/*    gap: 5px;*/
-/*    margin-top: 10px;*/
-/*}*/
+/* Media query for screens with a maximum width of 768px (mobile devices) */
+@media (max-width: 768px) {
+    .home {
+        flex-direction: column; /* Display sidebar and main content in a column on mobile */
+        align-items: center; /* Center the content horizontally on mobile */
+    }
 
-.gauge-meter-group {
-    justify-content: space-around;
-    display: flex;
-    padding-left: 5%;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 10px;
+    .sidebar-container {
+        width: 100%; /* Full width on mobile */
+        margin-bottom: 20px; /* Add some space between sidebar and main content */
+    }
+
+    .main-container {
+        width: 100%; /* Full width on mobile */
+    }
 }
 
-.card-group {
-    justify-content: space-around;
-    display: flex;
-    padding-left: 5%;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 10px;
+/* Media query for screens with a minimum width of 769px (desktop screens) */
+@media (min-width: 769px) {
+    .sidebar-container {
+        width: 10%; /* Sidebar takes 20% of the width on desktop */
+    }
+
+    .main-container {
+        width: 80%; /* Main content takes 80% of the width on desktop */
+    }
+
+    /* Arrange cards and gauge meters in rows on desktop */
+    .card-group {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: flex-start; /* Adjust the spacing between cards and gauge meters */
+        gap: 10px; /* Add a gap between each card and gauge meter */
+        margin-top: 10px; /* Add some space between cards/gauge meters and the chart */
+    }
+    .gauge-meter-group {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: flex-start; /* Adjust the spacing between cards and gauge meters */
+        gap: 10px; /* Add a gap between each card and gauge meter */
+        margin-top: 10px; /* Add some space between cards/gauge meters and the chart */
+    }
+}
+
+/* Additional styles for the chart container */
+.chart-container {
+    width: 100%;
+    margin-top: 30px; /* Add some space between gauge meters and the chart */
+}
+
+/* Additional styles for the gauge meters and chart on smaller screens */
+/* The flex-direction property is overridden for smaller screens */
+@media (max-width: 768px) {
+    .gauge-meter-group,
+    .chart-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.blank {
+    background-color: lightblue;
+    padding: 20%;
 }
