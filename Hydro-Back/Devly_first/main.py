@@ -8,7 +8,7 @@ arduino = serial.Serial("COM9", 9600)
 time.sleep(5)
 
 async def send_sensor_data():
-    async with websockets.connect('ws://192.168.0.4:5000') as websocket: ##conexion al servidor
+    async with websockets.connect('ws://10.11.2.229:5000') as websocket: ##conexion al servidor
         while True:  # Bucle infinito para enviar datos continuamente
             val = arduino.readline().decode('ascii').strip()
             print("Cadena principal:", val)
@@ -17,6 +17,7 @@ async def send_sensor_data():
             separado = val.split(",")
 
             if len(separado) == 6:
+
                 dht11Temperature, dht11Humidity, ds18b20Temperature, ldrValue, phValue, tdsValue = separado
                 print("temperature:", dht11Temperature)
                 print("humedity", dht11Humidity)

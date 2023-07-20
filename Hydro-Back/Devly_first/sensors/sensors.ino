@@ -8,7 +8,7 @@
 
 #define DHTPIN 6
 #define DHTTYPE DHT11
-
+ 
 DHT dht(DHTPIN, DHTTYPE);
 OneWire ourWire(5);
 DallasTemperature sensors(&ourWire);
@@ -136,7 +136,7 @@ float readPHValue()
   }
 
   float voltage = 5 / adc_resolution * measurings / samples;
-  float phValue = 5 + ((2.5 - voltage) / 0.18);
+  float phValue = 3.5 + ((2.5 - voltage) / 0.18);
   return phValue;
 }
 
