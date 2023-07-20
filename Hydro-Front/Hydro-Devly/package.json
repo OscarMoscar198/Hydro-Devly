@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@nivo/bar": "^0.83.0",
+    "@nivo/line": "^0.83.0",
+    "@nivo/stream": "^0.83.0",
     "axios": "^1.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
