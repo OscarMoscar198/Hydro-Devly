@@ -20,7 +20,7 @@ function Loginform() {
     };
 
     axios
-      .post('http://localhost:400/login', user)
+      .post('http://18.214.206.13:400/login', user)
       .then((response) => {
         sessionStorage.setItem('token', response.data.token);
         // Procesar la respuesta exitosa si es necesario

@@ -2,6 +2,9 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <DHT.h>
+#include <SD.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 
 #define DHTPIN 6
 #define DHTTYPE DHT11
@@ -9,6 +12,16 @@
 DHT dht(DHTPIN, DHTTYPE);
 OneWire ourWire(5);
 DallasTemperature sensors(&ourWire);
+
+// Dirección I2C del LCD
+const int lcdAddress = 0x27;
+
+// Configuración del LCD
+const int lcdColumns = 16;
+const int lcdRows = 2;
+
+// Inicializar el objeto LCD
+LiquidCrystal_I2C lcd(lcdAddress, lcdColumns, lcdRows);
 
 // Variables para los sensores analógicos
 int pHSense = A0;
@@ -18,26 +31,33 @@ int samples = 10;
 float adc_resolution = 1024.0;
 float tdsValue;
 
-// Variables para control de ventilador y luces LED
-int ventiladorPin = 7;
-int ledPin = 8;
-float temperaturaMaxima = 30.0; // Temperatura máxima para encender el ventilador
-int ldrUmbral = 400; // Valor umbral del sensor LDR para encender las luces LED
-
-bool ventiladorActivado = false;
-bool lucesLEDActivadas = false;
+unsigned long previousMillis = 0;
+const unsigned long interval = 3000; // Intervalo de tiempo para cambiar los datos en el LCD (en milisegundos)
+int dataMode = 0; // Variable para controlar el modo de datos en el LCD
 
 void setup()
 {
   Serial.begin(9600);
-  dht.begin();
   sensors.begin();
-  pinMode(ventiladorPin, OUTPUT);
-  pinMode(ledPin, OUTPUT);
+  lcd.begin(lcdColumns, lcdRows);
+  lcd.backlight();
 }
 
 void loop()
 {
+  unsigned long currentMillis = millis();
+
+  // Verificar si ha pasado el intervalo de tiempo
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+
+    // Incrementar el modo de datos
+    dataMode++;
+    if (dataMode > 2) {
+      dataMode = 0;
+    }
+  }
+
   float ds18b20Temperature = readDS18B20Temperature();
   float dht11Temperature, dht11Humidity;
   readDHT11Data(dht11Temperature, dht11Humidity);
@@ -45,55 +65,52 @@ void loop()
   float phValue = readPHValue();
   float tdsValue = readTDSValue();
 
-  // Crear un objeto JSON
-  DynamicJsonDocument jsonDocument(200);
-  jsonDocument["ds18b20_temperatura"] = ds18b20Temperature;
-  jsonDocument["dht11_temperatura"] = dht11Temperature;
-  jsonDocument["dht11_humedad"] = dht11Humidity;
-  jsonDocument["ldr_valor"] = ldrValue;
-  jsonDocument["ph_valor"] = phValue;
-  jsonDocument["tds_valor"] = tdsValue;
-
-  // Convertir el objeto JSON en una cadena JSON
-  String jsonString;
-  serializeJson(jsonDocument, jsonString);
-
-  // Imprimir en el monitor serie
-  Serial.println(jsonString);
-
-  // Control de ventilador y luces LED
-  if (dht11Temperature > temperaturaMaxima && !ventiladorActivado)
-  {
-    digitalWrite(ventiladorPin, HIGH); // Encender el ventilador si la temperatura es alta
-    ventiladorActivado = true;
+  // Mostrar los datos en el LCD
+  lcd.clear();  // Limpiar el contenido anterior en el LCD
+  lcd.setCursor(0, 0);  // Establecer la posición del cursor en la primera fila
+  switch (dataMode) {
+    case 0:
+      lcd.print("Temp: ");
+      lcd.print(dht11Temperature);
+      lcd.print("C");
+      lcd.setCursor(0, 1);  // Establecer la posición del cursor en la segunda fila
+      lcd.print("Hum: ");
+      lcd.print(dht11Humidity);
+      lcd.print("%");
+      break;
+    case 1:
+      lcd.print("Light: ");
+      lcd.print(ldrValue);
+      lcd.setCursor(0, 1);  // Establecer la posición del cursor en la segunda fila
+      lcd.print("WaterTem: ");
+      lcd.print(ds18b20Temperature);
+      lcd.print("C");
+      break;
+    case 2:
+      lcd.print("pH: ");
+      lcd.print(phValue);
+      lcd.setCursor(0, 1);  // Establecer la posición del cursor en la segunda fila
+      lcd.print("Cndc: ");
+      lcd.print(tdsValue);
+      lcd.print("µS/cm");
+      break;
   }
-  else if (dht11Temperature <= temperaturaMaxima && ventiladorActivado)
-  {
-    digitalWrite(ventiladorPin, LOW); // Apagar el ventilador si la temperatura es baja
-    ventiladorActivado = false;
-  }
 
-  if (ldrValue < ldrUmbral && !lucesLEDActivadas)
-  {
-    digitalWrite(ledPin, HIGH); // Encender las luces LED si la intensidad de luz es baja
-    lucesLEDActivadas = true;
-  }
-  else if (ldrValue >= ldrUmbral && lucesLEDActivadas)
-  {
-    digitalWrite(ledPin, LOW); // Apagar las luces LED si la intensidad de luz es alta
-    lucesLEDActivadas = false;
-  }
+
+
+
+
+
+  Serial.println(String(dht11Temperature,2) + "," + String(dht11Humidity,2) + "," + String(ds18b20Temperature,2) + "," + String(ldrValue,2) + "," + String(phValue,2) + "," + String(tdsValue,2) );
 
   delay(5000);
 }
+
 
 float readDS18B20Temperature()
 {
   sensors.requestTemperatures();
   float temperature = sensors.getTempCByIndex(0);
-  Serial.print("Temperatura ds18b20 = ");
-  Serial.print(temperature);
-  Serial.println(" °C");
   return temperature;
 }
 
@@ -101,20 +118,11 @@ void readDHT11Data(float &temperature, float &humidity)
 {
   temperature = dht.readTemperature();
   humidity = dht.readHumidity();
-
-  Serial.print("Humedad dht11: ");
-  Serial.print(humidity);
-  Serial.println(" %");
-  Serial.print("Temperatura dht11: ");
-  Serial.print(temperature);
-  Serial.println(" °C");
 }
 
 int readLDRValue()
 {
   int value = analogRead(ldrSense);
-  Serial.print("Intensidad de luz: ");
-  Serial.println(value);
   return value;
 }
 
@@ -128,22 +136,14 @@ float readPHValue()
   }
 
   float voltage = 5 / adc_resolution * measurings / samples;
-  float phValue = 7 + ((2.5 - voltage) / 0.18);
-
-  Serial.print("pH = ");
-  Serial.println(phValue);
-
+  float phValue = 5 + ((2.5 - voltage) / 0.18);
   return phValue;
 }
 
 float readTDSValue()
 {
   int sensorValue = analogRead(tdsSense);
-  float calibrationFactor = 0.5;
+  float calibrationFactor = 5;
   float tdsValue = sensorValue * calibrationFactor;
-
-  Serial.print("TDS Value (ppm): ");
-  Serial.println(tdsValue, 2);
-
   return tdsValue;
 }
