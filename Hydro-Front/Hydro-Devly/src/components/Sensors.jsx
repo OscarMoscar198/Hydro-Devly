@@ -4,9 +4,10 @@ export default function Sensors() {
     const [sensorData, setSensorData] = useState([
       { name: "Temperature", value: 0, unit: "°C", safeRange: [18, 40] },
       { name: "Humidity", value: 0, unit: "%", safeRange: [40, 60] },
-      { name: "Altitude", value: 0, unit: "m", safeRange: [0, 500] },
-      { name: "Pressure", value: 0, unit: "atm", safeRange: [0, 70] },
-      { name: "CO2", value: 0, unit: "ppm", safeRange: [400, 700] },
+      { name: "pH", value: 0, unit: "µmho/cm", safeRange: [0, 500] },
+      { name: "Conductivity", value: 0, unit: "°mhos/cm", safeRange: [0, 70] },
+      { name: "WaterTemp", value: 0, unit: "°C", safeRange: [400, 700] },
+      { name: "Light", value: 0, unit: "SI", safeRange: [400, 700] },
     ]);
   
     const [reportURL, setReportURL] = useState(null);
@@ -99,7 +100,7 @@ export default function Sensors() {
                 {sensor.value} {sensor.unit}
               </p>
               <p className="text-sm">
-                {isSafe(sensor) ? "Safe" : "Unsafe for humans"}
+                {isSafe(sensor) ? "Safe" : "Unsafe for plants"}
               </p>
             </div>
           ))}
