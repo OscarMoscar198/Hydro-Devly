@@ -10,7 +10,7 @@ import pandas as pd
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__, static_folder="Public", static_url_path="/Public")
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/Devly'
+app.config['MONGO_URI'] = 'mongodb+srv://sensorsDevly:devly1@sensorsdevly.wnv4cc4.mongodb.net/Sensors'
 app.config['SECRET_KEY'] = 'b99878292951aa53e17598417a4a0a0121fcd0808ef8ae13f76a786a09bdaa4f'
 mongo = PyMongo(app)
 
