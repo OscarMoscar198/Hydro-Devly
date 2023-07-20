@@ -13,8 +13,8 @@ function App() {
         <Route path='/*' element={<Login />}></Route>
         <Route path='/login' element={<Login />}></Route>
         <Route path='/signup' element={<Signup />}></Route>
-          <Route path='/home' element={<Home />}></Route>
-        {/*<Route path='/home' element={<PrivateRoutes><Home /></PrivateRoutes>}></Route>*/}
+          {/*<Route path='/home' element={<Home />}></Route>*/}
+        <Route path='/home' element={<PrivateRoutes><Home /></PrivateRoutes>}></Route>
       </Routes>
     </BrowserRouter>
   )

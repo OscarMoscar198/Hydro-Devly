@@ -1,4 +1,3 @@
-import React from 'react';
 import Gauge from 'react-svg-gauge';
 import '../assets/styles/gaugeMeter.css';
 

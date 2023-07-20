@@ -12,8 +12,7 @@ const Home = () => {
 
     useEffect(() => {
         const token = sessionStorage.getItem('token');
-        console.log(token);
-        // Fetch sensor data from the API with authorization headers
+        // console.log(token);
         axios
             .get('http://localhost:400/api/calcular', {
                 headers: {

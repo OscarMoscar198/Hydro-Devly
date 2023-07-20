@@ -29,7 +29,7 @@ function Loginform() {
         event.preventDefault();
 
         axios
-        .post("http://localhost:400/", user)
+        .post("http://localhost:400/login", user)
         .then((response) => {
             sessionStorage.setItem("token", response.data.token);
             // Procesar la respuesta exitosa si es necesario
