@@ -1,36 +1,39 @@
 import {useEffect, useState} from 'react';
 import "../assets/styles/home.css"
+import {Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend} from 'chart.js';
+import {Bar} from 'react-chartjs-2';
 import HomeSidebar from '../components/HomeSidebar.jsx';
 import GaugeMeter from "../components/GaugeMeter.jsx";
-// import axios from "axios";
-import Chart from "../components/Chart.jsx";
+
+ChartJS.register(
+    BarElement, CategoryScale, LinearScale, Tooltip, Legend
+)
 
 const Home = () => {
     const [sensorData, setSensorData] = useState([
-        {name: "Temperature", value: 29, unit: "°C"},
-        {name: "Water pH", value: 17, unit: "%"},
-        {name: "Air Temperature", value: 56, unit: "°C"},
-        {name: "Humidity", value: 88, unit: "hPa"},
+        {name: "Water Temperature", value: 0, unit: "°C"},
+        {name: "Temperature", value: 0, unit: "°C"},
+        {name: "Humidity", value: 0, unit: "%"},
+        {name: "Light", value: 0, unit: "lux"},
+        {name: "Water pH", value: 0, unit: "pH"},
+        {name: "Conduct", value: 0, unit: "S"},
     ]);
 
     useEffect(() => {
-        const socket = new WebSocket("ws://192.168.0.4:5000");
+        const socket = new WebSocket("ws://localhost:4000");
+
         socket.onmessage = (event) => {
             try {
                 const mensajeJSON = event.data;
                 const mensajeObjeto = JSON.parse(mensajeJSON);
                 console.log("Mensaje recibido:", mensajeObjeto);
 
-                // Actualiza el estado sensorData con los nuevos valores recibidos
                 setSensorData((prevSensorData) => {
-                    // Crea un nuevo array de datos de sensores actualizados
                     const updatedSensorData = prevSensorData.map((sensor) => {
-                        // Busca el sensor correspondiente en el objeto recibido
                         const matchingKey = Object.keys(mensajeObjeto).find(
                             (key) => key.toLowerCase() === sensor.name.toLowerCase()
                         );
                         if (matchingKey) {
-                            // Actualiza el valor del sensor con el valor correspondiente del objeto
                             return {
                                 ...sensor,
                                 value: mensajeObjeto[matchingKey],
@@ -57,40 +60,51 @@ const Home = () => {
 
     const getColorForSensor = (sensorName) => {
         switch (sensorName) {
+            case "Water Temperature":
+                return 'rgb(255, 99, 132)';
             case "Temperature":
-                return "#00FFFF";
-            case "Water pH":
-                return "#FFFF00";
-            case "Air Temperature":
-                return "#DC143C";
+                return 'rgb(255, 159, 64)';
             case "Humidity":
-                return "#8A2BE2";
+                return 'rgb(255, 205, 86)';
+            case "Light":
+                return 'rgb(75, 192, 192)';
+            case "Water pH":
+                return 'rgb(54, 162, 235)';
+            case "Conduct":
+                return 'rgb(153, 102, 255)';
             default:
                 return "#000000"; // Default color in case the sensor name doesn't match any cases
         }
     };
+    const labels = sensorData.map(sensor => sensor.name);
+    const values = sensorData.map(sensor => sensor.value);
+    const BarData = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'sensor data',
+                data: values,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 205, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
+                ],
+                borderWidth: 1
+            },
+        ]
+    }
 
-    const data = [
-        {
-            waterTemperature: Math.floor(Math.random() * 100) + 1,
-            waterPh: Math.floor(Math.random() * 100) + 1,
-            airTemperature: Math.floor(Math.random() * 100) + 1,
-            airHumidity: Math.floor(Math.random() * 100) + 1
-        },
-        {
-            waterTemperature: Math.floor(Math.random() * 100) + 1,
-            waterPh: Math.floor(Math.random() * 100) + 1,
-            airTemperature: Math.floor(Math.random() * 100) + 1,
-            airHumidity: Math.floor(Math.random() * 100) + 1
-        },
-        {
-            waterTemperature: Math.floor(Math.random() * 100) + 1,
-            waterPh: Math.floor(Math.random() * 100) + 1,
-            airTemperature: Math.floor(Math.random() * 100) + 1,
-            airHumidity: Math.floor(Math.random() * 100) + 1
-        },
-        // Add more sensor data objects here
-    ];
     return (
         <div className="home-container">
             <div className="home">
@@ -99,16 +113,15 @@ const Home = () => {
                 </div>
                 <div className="main-container">
                     <div>
+                        <div className="flex flex-col justify-center items-center space-y-6">
+                            <h1 className="data-title">Data</h1>
+                            <br/>
+                        </div>
                         <div>
-                            <div className="flex flex-col justify-center items-center space-y-6">
-                                <h1 className="data-title">Data Analytics</h1>
-                                <h3 className="sensor-subtitle">sensors</h3>
-                                <br/>
-                            </div>
                             <div className="cards">
                                 {sensorData.map((sensor) => (
                                     <div className="bg-white p-4" key={sensor.name}>
-                                        <h2 className="text-lg font-semibold">{sensor.name}</h2>
+                                        <h2 className="text-lg">{sensor.name}</h2>
                                         <p className="text-xl">
                                             {sensor.value} {sensor.unit}
                                         </p>
@@ -126,15 +139,17 @@ const Home = () => {
                                 />
                             ))}
                         </div>
-                        <Chart data={data}/>
-                        <div className="blank">
-
+                        <div className="bar">
+                            <Bar data={BarData}>
+                            </Bar>
                         </div>
-                    </div>
+                        <div className="blank" />
+=                    </div>
                 </div>
             </div>
         </div>
-    );
+    )
+        ;
 }
 
 export default Home;

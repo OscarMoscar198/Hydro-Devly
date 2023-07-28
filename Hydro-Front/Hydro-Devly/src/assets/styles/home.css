@@ -3,7 +3,7 @@
 }
 
 .home {
-    padding-left: 10%;
+    padding-left: 7%;
     padding-right: 10%;
     padding-top: 2%;
     display: flex;
@@ -35,17 +35,17 @@
         width: 80%;
     }
     .cards {
-        justify-content: space-between;
+        justify-content: flex-start;
         display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
+        flex-wrap: nowrap;
+        gap: 10px;
+        margin-top: 10px;
+        margin-right: 200px;
     }
 
     .bg-white {
-        width: 200px;
         margin-bottom: 1rem;
         flex: 0 0 200px;
-        height: 200px;
         padding: 1rem;
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -65,23 +65,35 @@
     }
 
     .data-title {
+        font-size: 70px;
+        font-weight: 600;
+        background-image: linear-gradient(to left, #074d79, #4facf6);
+        color: transparent;
+        background-clip: text;
+        -webkit-background-clip: text;
         justify-content: center;
         display: flex;
-        font-size: 1.5rem;
-        font-weight: bold;
+        padding-left: 20%;
     }
-    .sensor-subtitle {
-        justify-content: center;
+
+    .bar {
         display: flex;
-        font-size: 1rem;
-        font-weight: bold;
+        justify-content: center;
+        background-color: white;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        width: 124%;
+        height: 50%;
+        border-radius: 0.375rem;
+        padding: 10px;
     }
+
     .gauge-meter-group {
         display: flex;
         flex-wrap: nowrap;
         justify-content: flex-start;
         gap: 10px;
-        margin-top: 10px;
+        margin-right: 200px;
     }
 }
 @media (max-width: 768px) {

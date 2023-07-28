@@ -6,14 +6,14 @@ const GaugeMeter = ({ value, label, color }) => {
         <div className="gauge-meter">
             <Gauge
                 value={value}
-                width={250}
-                height={200}
+                width={174}
+                height={140}
                 label={label}
                 min={0}
                 max={100}
                 color={color}
-                topLabelStyle={{ fontSize: '20px', fontWeight: 'bold' }}
-                valueLabelStyle={{ fontSize: '36px', fontWeight: 'bold' }}
+                topLabelStyle={{ fontSize: '17px', fontWeight: 'bold' }}
+                valueLabelStyle={{ fontSize: '20px', fontWeight: 'bold' }}
                 maxMinLabelStyle={{ fontSize: '16px' }}
                 labelStyle={{ fontSize: '16px' }}
             />

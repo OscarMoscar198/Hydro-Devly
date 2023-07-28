@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "@nivo/bar": "^0.83.0",
+    "@nivo/line": "^0.83.0",
+    "axios": "^1.4.0",
+    "chart.js": "^4.3.2",
+    "react-chartjs-2": "^5.2.0",
+    "react-svg-gauge": "^1.0.10",
+    "recharts": "^2.7.2",
+    "websockets": "^0.2.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.3"
+  }
+}
