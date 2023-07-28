@@ -87,6 +87,17 @@
         border-radius: 0.375rem;
         padding: 10px;
     }
+    .line {
+        display: flex;
+        justify-content: center;
+        background-color: white;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        width: 124%;
+        height: 50%;
+        border-radius: 0.375rem;
+        padding: 10px;
+    }
 
     .gauge-meter-group {
         display: flex;
@@ -106,5 +117,5 @@
 }
 .blank {
     background-color: lightblue;
-    padding: 20%;
+    padding: 5%;
 }

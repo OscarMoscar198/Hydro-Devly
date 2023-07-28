@@ -1,12 +1,22 @@
 import {useEffect, useState} from 'react';
+import {
+    Chart as ChartJS,
+    BarElement,
+    LineElement,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import {Bar, Line} from 'react-chartjs-2';
 import "../assets/styles/home.css"
-import {Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend} from 'chart.js';
-import {Bar} from 'react-chartjs-2';
 import HomeSidebar from '../components/HomeSidebar.jsx';
 import GaugeMeter from "../components/GaugeMeter.jsx";
 
+
 ChartJS.register(
-    BarElement, CategoryScale, LinearScale, Tooltip, Legend
+    BarElement, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend,
 )
 
 const Home = () => {
@@ -104,6 +114,18 @@ const Home = () => {
             },
         ]
     }
+    const LineData = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'sensor data',
+                data: values,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            },
+        ]
+    }
 
     return (
         <div className="home-container">
@@ -143,8 +165,13 @@ const Home = () => {
                             <Bar data={BarData}>
                             </Bar>
                         </div>
-                        <div className="blank" />
-=                    </div>
+                        <div className="line">
+                            <Line data={LineData}>
+                            </Line>
+                        </div>
+                        <div className="blank"/>
+                        =
+                    </div>
                 </div>
             </div>
         </div>
