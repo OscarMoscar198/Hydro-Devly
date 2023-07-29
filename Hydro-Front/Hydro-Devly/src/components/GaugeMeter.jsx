@@ -10,7 +10,7 @@ const GaugeMeter = ({ value, label, color }) => {
                 height={140}
                 label={label}
                 min={0}
-                max={100}
+                max={200}
                 color={color}
                 topLabelStyle={{ fontSize: '17px', fontWeight: 'bold' }}
                 valueLabelStyle={{ fontSize: '20px', fontWeight: 'bold' }}

@@ -21,16 +21,16 @@ ChartJS.register(
 
 const Home = () => {
     const [sensorData, setSensorData] = useState([
-        {name: "Water Temperature", value: 0, unit: "°C"},
+        {name: "WaterTem", value: 0, unit: "°C"},
         {name: "Temperature", value: 0, unit: "°C"},
-        {name: "Humidity", value: 0, unit: "%"},
+        {name: "Humedity", value: 0, unit: "%"},
         {name: "Light", value: 0, unit: "lux"},
-        {name: "Water pH", value: 0, unit: "pH"},
-        {name: "Conduct", value: 0, unit: "S"},
+        {name: "pH", value: 0, unit: "pH"},
+        {name: "Conduc", value: 0, unit: "S"},
     ]);
 
     useEffect(() => {
-        const socket = new WebSocket("ws://localhost:4000");
+        const socket = new WebSocket("ws://18.206.113.60:4000");
 
         socket.onmessage = (event) => {
             try {
@@ -70,17 +70,17 @@ const Home = () => {
 
     const getColorForSensor = (sensorName) => {
         switch (sensorName) {
-            case "Water Temperature":
+            case "WaterTem":
                 return 'rgb(255, 99, 132)';
             case "Temperature":
                 return 'rgb(255, 159, 64)';
-            case "Humidity":
+            case "Humedity":
                 return 'rgb(255, 205, 86)';
             case "Light":
                 return 'rgb(75, 192, 192)';
-            case "Water pH":
+            case "pH":
                 return 'rgb(54, 162, 235)';
-            case "Conduct":
+            case "Conduc":
                 return 'rgb(153, 102, 255)';
             default:
                 return "#000000"; // Default color in case the sensor name doesn't match any cases
