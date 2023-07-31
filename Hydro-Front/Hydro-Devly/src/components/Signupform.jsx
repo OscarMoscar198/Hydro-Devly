@@ -51,7 +51,7 @@ function Signupform() {
       };
 
       axios
-        .post('http://18.214.206.13:400/register', user)
+        .post('https://18.214.206.13:400/register', user)
         .then((response) => {
           // Procesar la respuesta exitosa si es necesario
           console.log(response.data);
