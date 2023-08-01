@@ -21,12 +21,12 @@ ChartJS.register(
 
 const Home = () => {
     const [sensorData, setSensorData] = useState([
-        {name: "WaterTem", value: 0, unit: "°C"},
-        {name: "Temperature", value: 0, unit: "°C"},
-        {name: "Humedity", value: 0, unit: "%"},
-        {name: "Light", value: 0, unit: "lux"},
+        {name: "waterTem", value: 0, unit: "°C"},
+        {name: "temperature", value: 0, unit: "°C"},
+        {name: "humedity", value: 0, unit: "%"},
+        {name: "light", value: 0, unit: "lux"},
         {name: "pH", value: 0, unit: "pH"},
-        {name: "Conduc", value: 0, unit: "S"},
+        {name: "conduc", value: 0, unit: "S"},
     ]);
 
     useEffect(() => {
@@ -70,17 +70,17 @@ const Home = () => {
 
     const getColorForSensor = (sensorName) => {
         switch (sensorName) {
-            case "WaterTem":
+            case "waterTem":
                 return 'rgb(255, 99, 132)';
-            case "Temperature":
+            case "temperature":
                 return 'rgb(255, 159, 64)';
-            case "Humedity":
+            case "humedity":
                 return 'rgb(255, 205, 86)';
-            case "Light":
+            case "light":
                 return 'rgb(75, 192, 192)';
             case "pH":
                 return 'rgb(54, 162, 235)';
-            case "Conduc":
+            case "conduc":
                 return 'rgb(153, 102, 255)';
             default:
                 return "#000000"; // Default color in case the sensor name doesn't match any cases
