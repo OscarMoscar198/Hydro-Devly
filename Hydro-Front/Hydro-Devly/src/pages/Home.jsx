@@ -30,7 +30,7 @@ const Home = () => {
     ]);
 
     useEffect(() => {
-        const socket = new WebSocket("ws://18.206.113.60:4000");
+        const socket = new WebSocket("ws://54.205.194.13:4000");
 
         socket.onmessage = (event) => {
             try {
